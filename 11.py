@@ -288,6 +288,33 @@ class Solution:
                         print(num,i,dp)
         return dp[-1]
 
+
+def max_value(T, M, times, values):
+    dp = [[0] * (T + 1) for _ in range(M + 1)]
+
+    for i in range(1, M + 1):
+        time, value = times[i - 1], values[i - 1]
+        for j in range(1, T + 1):
+            if j < time:
+                dp[i][j] = dp[i - 1][j]
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - time] + value)
+
+    return dp[M][T]
+
+T, M = map(int, input().split())
+times = []
+values = []
+for _ in range(M):
+    t, v = map(int, input().split())
+    times.append(t)
+    values.append(v)
+
+print(max_value(T, M, times, values))        
+        
+        
+        
+
     matrix = list(zip(*matrix))[::-1]  ##逆时针旋转90度 解包+反转
     matrix[:] = [row[::-1] for row in zip(*matrix)]  ##shun时针旋转90度
 
