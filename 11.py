@@ -1,4 +1,64 @@
 import pandas as pd
+from sklearn.linear_model import LogisticRegression
+
+# 读取训练集和测试集
+train_data = pd.read_csv('input/train.csv')
+test_data = pd.read_csv('input/test.csv')
+
+# 提取特征和目标变量
+train_features = train_data.iloc[:, 2:]
+train_target = train_data['target']
+test_features = test_data.iloc[:, 1:]
+
+# 创建和训练多分类逻辑回归模型
+model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+model.fit(train_features, train_target)
+
+# 在测试集上做预测
+preds = model.predict(test_features)
+preds = '\n'.join(map(str, preds))
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+# 读取数据
+train = pd.read_csv('input/train.csv')
+test = pd.read_csv('input/test.csv')
+
+# 拆分训练数据和标签
+X = train.iloc[:, 2:]
+y = train['target']
+
+# 初始化LabelEncoder
+le = LabelEncoder()
+
+# 将字符串标签转换为数值标签
+y = le.fit_transform(y)
+
+# 数据标准化
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+
+# 划分训练集和验证集
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 使用随机森林进行训练
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# 对测试集进行预测
+test_X = test.iloc[:, 1:]
+test_X = scaler.transform(test_X)  # 注意也要进行相同的标准化处理
+preds = model.predict(test_X)
+
+# 保存预测结果
+preds = '\n'.join(map(str, preds))
+
+preds = le.inverse_transform(preds)
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
